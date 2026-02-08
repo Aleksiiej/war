@@ -13,7 +13,7 @@ qt_standard_project_setup()
 
 qt_add_executable(${PROJECT_NAME}
     main.cpp
-    src/TcpServer.cpp
+    src/NetworkManager.cpp
 )
 
 qt_add_qml_module(${PROJECT_NAME}
