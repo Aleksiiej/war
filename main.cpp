@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include "src/NetworkManager.hpp"
+#include "src/Receiver.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -10,8 +10,7 @@ int main(int argc, char *argv[])
     const QUrl url(u"qrc:/war/qml/main.qml"_qs);
     engine.load(url);
 
-    NetworkManager server;
-    server.server_.listen(QHostAddress::Any, 12345);
+    Receiver server;
 
     return app.exec();
 }
