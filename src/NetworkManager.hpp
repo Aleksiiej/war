@@ -11,28 +11,25 @@ public:
     NetworkManager();
 
     void connectToServer(const QString& host, const int port);
+    void sendMessage(QString&& message);
     
     QTcpSocket* socket_{};
-    std::shared_ptr<QTcpServer> server_{};
-
-signals:
-    void dummySignal();
+    QTcpSocket 
+    QTcpServer server_{};
 
 public slots:
-    void dummySlot()
+    void onReadyRead()
     {
-        std::cout << "dummy slot speaking" << std::endl;
+        std::cout << "Received new message" << std::endl;
+        QDataStream in(socket_);
+        QString message;
+        in >> message;
+        qDebug() << "Received:" << message;
     }
 
     void onNewConnection()
     {
-        std::cout << "New connection avalaible" << std::endl;
-        socket_ = server_->nextPendingConnection();
-        char buf[1024];
-        qint64 lineLength = socket_->readLine(buf, sizeof(buf));
-        for(int i = 0; i < lineLength; i++)
-        {
-            std::cout << buf[i];
-        }
+        std::cout << "New socket connected" << std::endl;
+        socket_ = server_.nextPendingConnection();
     }
 };

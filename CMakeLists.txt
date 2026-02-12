@@ -16,6 +16,11 @@ qt_add_executable(${PROJECT_NAME}
     src/NetworkManager.cpp
 )
 
+qt_add_executable(sender
+    sender.cpp
+    src/NetworkManager.cpp
+)
+
 qt_add_qml_module(${PROJECT_NAME}
     URI war
     VERSION 1.0
@@ -23,4 +28,5 @@ qt_add_qml_module(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Quick)
+target_link_libraries(sender PRIVATE Qt6::Quick)
 

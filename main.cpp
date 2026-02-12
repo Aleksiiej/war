@@ -11,9 +11,7 @@ int main(int argc, char *argv[])
     engine.load(url);
 
     NetworkManager server;
-    server.server_->listen(QHostAddress::Any, 12345);
-
-    server.connectToServer("localhost", 12345);
+    server.server_.listen(QHostAddress::Any, 12345);
 
     return app.exec();
 }
