@@ -10,8 +10,12 @@ class Sender: public QObject
 public:
     Sender();
     void connectToServer(const QString& host, const int port);
-    void sendMessage(QString message);
+    void sendMessage(const QString& message);
+
+private slots:
+    void onConnected();
+    void onErrorOccurred();
 
 private:
-    QTcpSocket* socket_{};
+    QTcpSocket socket_{};
 };

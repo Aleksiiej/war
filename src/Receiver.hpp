@@ -11,7 +11,7 @@ class Receiver: public QObject
 public:
     Receiver();
 
-public slots:
+private slots:
     void onNewConnection();
     void onReadyRead();
 

@@ -10,11 +10,11 @@ int main()
     Sender sender;
     sender.connectToServer("localhost", 12345);
     sender.sendMessage("MESSAGE");
-    // for(int i = 0; i <= 10; i++)
-    // {
-    //     std::this_thread::sleep_for(3000ms);
-    //     server.sendMessage("MESSAGE");
-    // }
+    for(int i = 0; i <= 10; i++)
+    {
+        std::this_thread::sleep_for(3000ms);
+        sender.sendMessage("MESSAGE");
+    }
     while(true)
     {}
     
