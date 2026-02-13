@@ -11,14 +11,15 @@ find_package(Qt6 REQUIRED COMPONENTS Quick)
 
 qt_standard_project_setup()
 
-qt_add_executable(receiver
-    main.cpp
-    src/Receiver.cpp
-)
-
 qt_add_executable(sender
     sender.cpp
     src/Sender.cpp
+)
+
+qt_add_executable(receiver
+    main.cpp
+    src/Receiver.cpp
+    src/ChatContainer.cpp
 )
 
 qt_add_qml_module(receiver
