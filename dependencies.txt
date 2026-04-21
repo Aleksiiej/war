@@ -1,0 +1,3 @@
+mesa-utils
+libgl1-mesa-*
+qml6-module-*
