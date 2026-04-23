@@ -10,7 +10,5 @@ int main(int argc, char *argv[])
     const QUrl url(u"qrc:/war/qml/main.qml"_qs);
     engine.load(url);
 
-    Receiver server;
-
     return app.exec();
 }

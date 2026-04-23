@@ -20,8 +20,9 @@ qt_add_executable(sender
 qt_add_executable(receiver
     main.cpp
     src/Receiver.cpp
-    src/ChatContainer.cpp
 )
+
+target_include_directories(receiver PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
 
 qt_add_qml_module(receiver
     URI war

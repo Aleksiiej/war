@@ -1,12 +1,13 @@
 import QtQuick
 import QtQuick.Controls
 
+import war 1.0
+
 
 Window 
 {
     id: root
     visible: true
-    color: "lightblue"
 
     width: 800
     height: 600
@@ -14,6 +15,34 @@ Window
     maximumWidth: width
     minimumHeight: height
     maximumHeight: height
+    
+    Rectangle
+    {
+        id: chatRect
+        color: "lightblue"
+
+        anchors
+        {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            bottom: rect1.top
+        }
+        
+        ListView
+        {
+            id: chatListView
+            anchors.fill: parent
+            model: ListModel{
+                id: chatListModel
+                ListElement{message: "Hi!"}
+            }
+            delegate: Text{
+                text: message
+            }
+            clip: true
+        }
+    }
 
     Rectangle
     {
@@ -30,6 +59,7 @@ Window
 
         TextArea
         {
+            id: textArea1
             height: parent.height
             width: parent.width - parent.buttonWidth
             anchors
@@ -60,11 +90,18 @@ Window
                 anchors.fill: parent
                 onClicked: 
                 {
-                    console.log("HELLO");
+                    receiver.addMessage(textArea1.text)
+                    chatListModel.append({message: textArea1.text})
+                    textArea1.clear()
                 }
                 onPressed: parent.color = "lightgrey"
                 onReleased: parent.color = "gray"
             }
         }
+    }
+
+    Receiver
+    {
+        id: receiver
     }
 }
