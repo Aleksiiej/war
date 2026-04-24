@@ -17,19 +17,19 @@ qt_add_executable(sender
     src/Sender.cpp
 )
 
-qt_add_executable(receiver
+qt_add_executable(tcpServer
     main.cpp
-    src/Receiver.cpp
+    src/TcpServer.cpp
 )
 
-target_include_directories(receiver PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
+target_include_directories(tcpServer PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
 
-qt_add_qml_module(receiver
+qt_add_qml_module(tcpServer
     URI war
     VERSION 1.0
     QML_FILES qml/main.qml
 )
 
-target_link_libraries(receiver PRIVATE Qt6::Quick)
+target_link_libraries(tcpServer PRIVATE Qt6::Quick)
 target_link_libraries(sender PRIVATE Qt6::Quick)
 

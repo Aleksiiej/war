@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include "src/Receiver.hpp"
+#include "src/TcpServer.hpp"
 
 int main(int argc, char *argv[])
 {

@@ -90,8 +90,8 @@ Window
                 anchors.fill: parent
                 onClicked: 
                 {
-                    receiver.addMessage(textArea1.text)
                     chatListModel.append({message: textArea1.text})
+                    tcpServer.sendMessage(textArea1.text)
                     textArea1.clear()
                 }
                 onPressed: parent.color = "lightgrey"
@@ -100,8 +100,12 @@ Window
         }
     }
 
-    Receiver
+    TcpServer
     {
-        id: receiver
+        id: tcpServer
+        onSendToQml:
+        {
+            chatListModel.append({message: msg})
+        }
     }
 }
