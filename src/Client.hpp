@@ -3,12 +3,14 @@
 
 #include <iostream>
 
-class Sender: public QObject
+class Client: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
 
 public:
-    Sender();
+    Client();
+    
     void connectToServer(const QString& host, const int port);
     void sendMessage(const QString& message);
 

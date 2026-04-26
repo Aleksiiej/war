@@ -6,15 +6,14 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
-set(CMAKE_PREFIX_PATH "/home/vboxuser/Qt/6.11.0/gcc_64/lib/cmake/Qt6")
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
 qt_standard_project_setup()
 
-qt_add_executable(sender
-    sender.cpp
-    src/Sender.cpp
+qt_add_executable(client
+    main.cpp
+    src/Client.cpp
 )
 
 qt_add_executable(tcpServer
@@ -22,14 +21,21 @@ qt_add_executable(tcpServer
     src/TcpServer.cpp
 )
 
+target_include_directories(client PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
 target_include_directories(tcpServer PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
 
 qt_add_qml_module(tcpServer
     URI war
     VERSION 1.0
-    QML_FILES qml/main.qml
+    QML_FILES qml/tcpServer.qml
+)
+
+qt_add_qml_module(client
+    URI war
+    VERSION 1.0
+    QML_FILES qml/client.qml
 )
 
 target_link_libraries(tcpServer PRIVATE Qt6::Quick)
-target_link_libraries(sender PRIVATE Qt6::Quick)
+target_link_libraries(client PRIVATE Qt6::Quick)
 

@@ -83,6 +83,12 @@ Window
                 right: parent.right
             }
             color:"gray"
+
+            Text
+            {
+                anchors.centerIn: parent
+                text: "Send"
+            }
             
             MouseArea
             {
@@ -100,12 +106,8 @@ Window
         }
     }
 
-    TcpServer
+    Client
     {
-        id: tcpServer
-        onSendToQml:
-        {
-            chatListModel.append({message: msg})
-        }
+        id: client
     }
 }
