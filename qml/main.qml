@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 import war 1.0
 
@@ -16,6 +17,81 @@ Window
     minimumHeight: height
     maximumHeight: height
     
+    property var server: null
+    property var client: null
+
+    Rectangle
+    {
+        id: statusBarRect
+        height: 25
+        color: "lightblue"
+        anchors
+        {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+
+        RowLayout
+        {
+            id: statusBar
+
+            anchors.fill: parent
+
+            Button
+            {
+                id: createServerButton
+                text: "Create Server"
+                onClicked:
+                {
+                    if(!server)
+                    {
+                        server = Qt.createQmlObject(`
+                                    import war 1.0
+
+                                    TcpServer{}`,
+                                    root)
+                        chatListModel.append({message: "Server initialized. Listening..."})
+                    }
+                    else
+                    {
+                        chatListModel.append({message: "Instance of server already exists"})
+                    }
+                }
+            }
+
+            Rectangle
+            {
+                id: serverAddressRect
+                height: parent.height
+                width: 300
+            
+                TextArea
+                {
+                    id: serverAddressTextArea
+                    anchors.fill: parent
+                    placeholderText: qsTr("Enter IP address")
+                    placeholderTextColor: "black"
+                    color: "black"
+                }
+            }
+
+            Button
+            {
+                id: joinServerButton
+                text: "Join Server"
+                onClicked:
+                {
+                    server = Qt.createQmlObject(`
+                                import war 1.0
+
+                                Client{}`,
+                                root)
+                }
+            }
+        }
+    }
+ 
     Rectangle
     {
         id: chatRect
@@ -23,7 +99,7 @@ Window
 
         anchors
         {
-            top: parent.top
+            top: statusBarRect.bottom
             left: parent.left
             right: parent.right
             bottom: rect1.top
@@ -70,7 +146,6 @@ Window
             placeholderText: qsTr("Enter text here")
             placeholderTextColor: "black"
             color: "black"
-            focus: true
         }
 
         Rectangle
@@ -104,10 +179,5 @@ Window
                 onReleased: parent.color = "gray"
             }
         }
-    }
-
-    Client
-    {
-        id: client
     }
 }

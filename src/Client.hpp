@@ -1,5 +1,6 @@
 #include <QTcpSocket>
 #include <QObject>
+#include <QtQml>
 
 #include <iostream>
 

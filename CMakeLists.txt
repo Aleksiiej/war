@@ -11,31 +11,19 @@ find_package(Qt6 REQUIRED COMPONENTS Quick)
 
 qt_standard_project_setup()
 
-qt_add_executable(client
+qt_add_executable(war
     main.cpp
     src/Client.cpp
-)
-
-qt_add_executable(tcpServer
-    main.cpp
     src/TcpServer.cpp
 )
 
-target_include_directories(client PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
-target_include_directories(tcpServer PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
+target_include_directories(war PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
 
-qt_add_qml_module(tcpServer
+qt_add_qml_module(war
     URI war
     VERSION 1.0
-    QML_FILES qml/tcpServer.qml
+    QML_FILES qml/main.qml
+              qml/Button.qml
 )
 
-qt_add_qml_module(client
-    URI war
-    VERSION 1.0
-    QML_FILES qml/client.qml
-)
-
-target_link_libraries(tcpServer PRIVATE Qt6::Quick)
-target_link_libraries(client PRIVATE Qt6::Quick)
-
+target_link_libraries(war PRIVATE Qt6::Quick)
