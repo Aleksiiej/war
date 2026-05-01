@@ -82,11 +82,12 @@ Window
                 text: "Join Server"
                 onClicked:
                 {
-                    server = Qt.createQmlObject(`
+                    client = Qt.createQmlObject(`
                                 import war 1.0
 
                                 Client{}`,
                                 root)
+                    client.connectToServer("127.0.0.1", 12345)
                 }
             }
         }
@@ -172,7 +173,18 @@ Window
                 onClicked: 
                 {
                     chatListModel.append({message: textArea1.text})
-                    tcpServer.sendMessage(textArea1.text)
+                    if(server)
+                    {
+                        server.sendMessage(textArea1.text)
+                    }
+                    if(client)
+                    {
+                        client.sendMessage(textArea1.text)
+                    }
+                    else
+                    {
+                        qDebug() << "cannot send message";
+                    }
                     textArea1.clear()
                 }
                 onPressed: parent.color = "lightgrey"

@@ -12,8 +12,8 @@ class Client: public QObject
 public:
     Client();
     
-    void connectToServer(const QString& host, const int port);
-    void sendMessage(const QString& message);
+    Q_INVOKABLE void connectToServer(const QString& host, const int port);
+    Q_INVOKABLE void sendMessage(const QString& message);
 
 private slots:
     void onConnected();
