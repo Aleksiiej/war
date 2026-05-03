@@ -49,7 +49,12 @@ Window
                         server = Qt.createQmlObject(`
                                     import war 1.0
 
-                                    TcpServer{}`,
+                                    TcpServer{
+                                        onSendToQml:
+                                        {
+                                            chatListModel.append({message: msg})
+                                        }
+                                    }`,
                                     root)
                         chatListModel.append({message: "Server initialized. Listening..."})
                     }
@@ -183,7 +188,7 @@ Window
                     }
                     else
                     {
-                        qDebug() << "cannot send message";
+                        console.log("cannot send message");
                     }
                     textArea1.clear()
                 }

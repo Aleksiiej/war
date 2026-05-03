@@ -18,6 +18,10 @@ public:
 private slots:
     void onConnected();
     void onErrorOccurred();
+    void onReadyRead();
+
+signals:
+    void sendToQml(const QString& msg);
 
 private:
     QTcpSocket socket_{};

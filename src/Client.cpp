@@ -37,3 +37,8 @@ void Client::onErrorOccurred()
 {
     qDebug() << "Error during socket connection";
 }
+
+void Client::onReadyRead()
+{
+    emit sendToQml(socket_.readAll());
+}
