@@ -23,9 +23,19 @@ void Client::connectToServer(const QString& host, const int port)
 
 void Client::sendMessage(const QString& message)
 {
-    socket_.write(message.toUtf8());
+    socket_.write((username_ + ": " + message).toUtf8());
     socket_.flush();
     qDebug() << "Data written to socket by sender";
+}
+
+const QString& Client::getUsername()
+{
+    return username_;
+}
+
+void Client::setUsername(const QString& username)
+{
+    username_ = username;
 }
 
 void Client::onConnected()

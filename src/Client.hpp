@@ -8,12 +8,15 @@ class Client: public QObject
 {
     Q_OBJECT
     QML_ELEMENT
+    Q_PROPERTY(QString username_ READ getUsername WRITE setUsername)
 
 public:
     Client();
     
     Q_INVOKABLE void connectToServer(const QString& host, const int port);
     Q_INVOKABLE void sendMessage(const QString& message);
+    Q_INVOKABLE const QString& getUsername();
+    Q_INVOKABLE void setUsername(const QString& username);
 
 private slots:
     void onConnected();
@@ -25,4 +28,5 @@ signals:
 
 private:
     QTcpSocket socket_{};
+    QString username_;
 };

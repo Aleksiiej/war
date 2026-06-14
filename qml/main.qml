@@ -67,6 +67,23 @@ Window
 
             Rectangle
             {
+                id: usernameRect
+                height: parent.height
+                width: 300
+            
+                TextArea
+                {
+                    id: usernameTextArea
+                    anchors.fill: parent
+                    placeholderText: qsTr("Enter username")
+                    placeholderTextColor: "black"
+                    color: "black"
+                }
+            }
+
+
+            Rectangle
+            {
                 id: serverAddressRect
                 height: parent.height
                 width: 300
@@ -93,6 +110,8 @@ Window
                                 Client{}`,
                                 root)
                     client.connectToServer("127.0.0.1", 12345)
+                    client.username_ = usernameTextArea.text
+                    console.log(client.username_)
                 }
             }
         }
