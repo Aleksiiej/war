@@ -5,6 +5,7 @@ Client::Client()
     qDebug() << "Client initialized.";
     connect(&socket_, &QTcpSocket::connected, this, &Client::onConnected);
     connect(&socket_, &QTcpSocket::errorOccurred, this, &Client::onErrorOccurred);
+    connect(&socket_, &QTcpSocket::readyRead, this, &Client::onReadyRead);
 }
 
 void Client::connectToServer(const QString& host, const int port)
@@ -50,5 +51,7 @@ void Client::onErrorOccurred()
 
 void Client::onReadyRead()
 {
-    emit sendToQml(socket_.readAll());
+    qDebug() << "Received new message";
+    const auto message = socket_.readAll();
+    emit sendToQml(message);
 }

@@ -23,7 +23,7 @@ Window
     Rectangle
     {
         id: statusBarRect
-        height: 25
+        height: 28
         color: "lightblue"
         anchors
         {
@@ -56,6 +56,7 @@ Window
                                         }
                                     }`,
                                     root)
+                        server.username_ = usernameTextArea.text
                         chatListModel.append({message: "Server initialized. Listening..."})
                     }
                     else
@@ -107,11 +108,15 @@ Window
                     client = Qt.createQmlObject(`
                                 import war 1.0
 
-                                Client{}`,
+                                Client{
+                                    onSendToQml:
+                                    {
+                                        chatListModel.append({message: msg})
+                                    }
+                                }`,
                                 root)
                     client.connectToServer("127.0.0.1", 12345)
                     client.username_ = usernameTextArea.text
-                    console.log(client.username_)
                 }
             }
         }
@@ -196,18 +201,17 @@ Window
                 anchors.fill: parent
                 onClicked: 
                 {
-                    chatListModel.append({message: textArea1.text})
                     if(server)
                     {
-                        server.sendMessage(textArea1.text)
+                        server.sendMessage(server.username_ + ": " + textArea1.text)
                     }
-                    if(client)
+                    else if(client)
                     {
                         client.sendMessage(textArea1.text)
                     }
                     else
                     {
-                        console.log("cannot send message");
+                        console.log("cannot send message, there is no server nor client");
                     }
                     textArea1.clear()
                 }

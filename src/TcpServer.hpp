@@ -8,12 +8,15 @@ class TcpServer: public QObject
 {
     Q_OBJECT
     QML_ELEMENT
+    Q_PROPERTY(QString username_ READ getUsername WRITE setUsername)
 
 public:
     TcpServer();
 
     Q_INVOKABLE void addMessage(const QString& msg);
     Q_INVOKABLE void sendMessage(const QString& message);
+    Q_INVOKABLE const QString& getUsername();
+    Q_INVOKABLE void setUsername(const QString& username);
 
 private slots:
     void onNewConnection();
@@ -27,4 +30,5 @@ private:
     QTcpServer server_{};
     QHash<QHostAddress, QTcpSocket*> sockets_;
     QVector<QString> messages_{};
+    QString username_;
 };
