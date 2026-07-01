@@ -50,7 +50,7 @@ Window
                                     import war 1.0
 
                                     TcpServer{
-                                        onSendToQml:
+                                        onSendToQml: (msg) =>
                                         {
                                             chatListModel.append({message: msg})
                                         }
@@ -109,7 +109,7 @@ Window
                                 import war 1.0
 
                                 Client{
-                                    onSendToQml:
+                                    onSendToQml: (msg) =>
                                     {
                                         chatListModel.append({message: msg})
                                     }
