@@ -46,18 +46,14 @@ Window
                 {
                     if(!server)
                     {
-                        server = Qt.createQmlObject(`
-                                    import war 1.0
+                        var serverComponent = Qt.createComponent("TcpServer.qml")
+                        if(serverComponent.status === Component.Ready)
+                        {
+                            server = serverComponent.createObject(root)
+                            server.username_ = usernameTextArea.text
+                            chatListModel.append({message: "Server initialized. Listening..."})
 
-                                    TcpServer{
-                                        onSendToQml: (msg) =>
-                                        {
-                                            chatListModel.append({message: msg})
-                                        }
-                                    }`,
-                                    root)
-                        server.username_ = usernameTextArea.text
-                        chatListModel.append({message: "Server initialized. Listening..."})
+                        }
                     }
                     else
                     {
@@ -105,18 +101,13 @@ Window
                 text: "Join Server"
                 onClicked:
                 {
-                    client = Qt.createQmlObject(`
-                                import war 1.0
-
-                                Client{
-                                    onSendToQml: (msg) =>
-                                    {
-                                        chatListModel.append({message: msg})
-                                    }
-                                }`,
-                                root)
-                    client.connectToServer("127.0.0.1", 12345)
-                    client.username_ = usernameTextArea.text
+                    var clientComponent = Qt.createComponent("Client.qml")
+                    if(clientComponent.status === Component.Ready)
+                    {
+                        client = clientComponent.createObject(root)
+                        client.username_ = usernameTextArea.text
+                        client.connectToServer("127.0.0.1", 12345)
+                    }
                 }
             }
         }
