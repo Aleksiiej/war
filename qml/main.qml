@@ -52,12 +52,20 @@ Window
                             server = serverComponent.createObject(root)
                             server.username_ = usernameTextArea.text
                             chatListModel.append({message: "Server initialized. Listening..."})
-
+                            usernameRect.color = "lightgrey"
+                            usernameTextArea.placeholderText = server.username_
+                            usernameTextArea.enabled = false
+                            createServerButton.text = "Close Server"
                         }
                     }
                     else
                     {
-                        chatListModel.append({message: "Instance of server already exists"})
+                        server.destroy()
+                        chatListModel.append({message: "Server removed"})
+                        usernameRect.color = "white"
+                        usernameTextArea.placeholderText = qsTr("Enter username")
+                        usernameTextArea.enabled = true
+                        createServerButton.text = "Create Server"
                     }
                 }
             }
@@ -123,7 +131,7 @@ Window
             top: statusBarRect.bottom
             left: parent.left
             right: parent.right
-            bottom: rect1.top
+            bottom: sendMsgRect.top
         }
         
         ListView
@@ -143,7 +151,7 @@ Window
 
     Rectangle
     {
-        id: rect1
+        id: sendMsgRect
         height: 30
         anchors
         {
@@ -156,7 +164,7 @@ Window
 
         TextArea
         {
-            id: textArea1
+            id: sendMsgTextArea
             height: parent.height
             width: parent.width - parent.buttonWidth
             anchors
@@ -188,23 +196,23 @@ Window
             
             MouseArea
             {
-                id: mouseArea1
+                id: sendMsgMouseArea
                 anchors.fill: parent
                 onClicked: 
                 {
                     if(server)
                     {
-                        server.sendMessage(server.username_ + ": " + textArea1.text)
+                        server.sendMessage(server.username_ + ": " + sendMsgTextArea.text)
                     }
                     else if(client)
                     {
-                        client.sendMessage(textArea1.text)
+                        client.sendMessage(sendMsgTextArea.text)
                     }
                     else
                     {
                         console.log("cannot send message, there is no server nor client");
                     }
-                    textArea1.clear()
+                    sendMsgTextArea.clear()
                 }
                 onPressed: parent.color = "lightgrey"
                 onReleased: parent.color = "gray"

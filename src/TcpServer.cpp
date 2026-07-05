@@ -8,6 +8,15 @@ TcpServer::TcpServer()
     qDebug() << "TcpServer initialized. Listening...";
 }
 
+TcpServer::~TcpServer()
+{
+    for(auto it = sockets_.begin(), end = sockets_.end(); it != end; it++)
+    {
+        it.value()->abort();
+    }
+    qDebug() << "TcpServer removed";
+}
+
 void TcpServer::addMessage(const QString& msg)
 {
     messages_.append(msg);

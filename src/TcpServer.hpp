@@ -12,6 +12,7 @@ class TcpServer: public QObject
 
 public:
     TcpServer();
+    ~TcpServer();
 
     Q_INVOKABLE void addMessage(const QString& msg);
     Q_INVOKABLE void sendMessage(const QString& message);
