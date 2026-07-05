@@ -12,8 +12,11 @@ Client::~Client()
     socket_.disconnectFromHost();
 }
 
-void Client::connectToServer(const QString& host, const int port)
+void Client::connectToServer(QString address)
 {
+    const auto addressList = address.split(':');
+    const auto host = addressList.at(0);
+    const auto port = addressList.at(1).toUShort();
     socket_.connectToHost(host, port);
     emit sendToQml("Connecting to server at " + host + ":" + QString::number(port));
     if (socket_.waitForConnected(3000))

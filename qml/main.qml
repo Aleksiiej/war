@@ -52,19 +52,24 @@ Window
                             server = serverComponent.createObject(root)
                             server.username_ = usernameTextArea.text
                             usernameRect.color = "lightgrey"
+                            serverAddressRect.color = "lightgrey"
                             usernameTextArea.placeholderText = server.username_
                             usernameTextArea.enabled = false
+                            serverAddressTextArea.enabled = false
                             createServerButton.text = "Close Server"
                             joinServerButton.enabled = false
                             sendMsgMouseArea.enabled = true
+                            chatListModel.append({message: "Server created. Listening..."})
                         }
                     }
                     else
                     {
                         server.destroy()
                         usernameRect.color = "white"
+                        serverAddressRect.color = "white"
                         usernameTextArea.placeholderText = qsTr("Enter username")
                         usernameTextArea.enabled = true
+                        serverAddressTextArea.enabled = true
                         createServerButton.text = "Create Server"
                         joinServerButton.enabled = true
                         sendMsgMouseArea.enabled = false
@@ -100,7 +105,7 @@ Window
                 {
                     id: serverAddressTextArea
                     anchors.fill: parent
-                    placeholderText: qsTr("Enter IP address")
+                    placeholderText: qsTr("Enter IP address and port")
                     placeholderTextColor: "black"
                     color: "black"
                 }
@@ -119,10 +124,12 @@ Window
                         {
                             client = clientComponent.createObject(root)
                             client.username_ = usernameTextArea.text
-                            client.connectToServer("127.0.0.1", 12345)
+                            client.connectToServer(serverAddressTextArea.text)
                             usernameRect.color = "lightgrey"
+                            serverAddressRect.color = "lightgrey"
                             usernameTextArea.placeholderText = client.username_
                             usernameTextArea.enabled = false
+                            serverAddressTextArea.enabled = false
                             joinServerButton.text = "Disconnect"
                             createServerButton.enabled = false
                             sendMsgMouseArea.enabled = true
@@ -132,8 +139,10 @@ Window
                     {
                         client.destroy()
                         usernameRect.color = "white"
+                        serverAddressRect.color = "white"
                         usernameTextArea.placeholderText = qsTr("Enter username")
                         usernameTextArea.enabled = true
+                        serverAddressTextArea.enabled = true
                         joinServerButton.text = "Join server"
                         joinServerButton.enabled = true
                         createServerButton.enabled = true
