@@ -2,23 +2,27 @@
 
 Client::Client()
 {
-    qDebug() << "Client initialized.";
-    connect(&socket_, &QTcpSocket::connected, this, &Client::onConnected);
+    connect(&socket_, &QTcpSocket::disconnected, this, &Client::onDisconnected);
     connect(&socket_, &QTcpSocket::errorOccurred, this, &Client::onErrorOccurred);
     connect(&socket_, &QTcpSocket::readyRead, this, &Client::onReadyRead);
+}
+
+Client::~Client()
+{
+    socket_.disconnectFromHost();
 }
 
 void Client::connectToServer(const QString& host, const int port)
 {
     socket_.connectToHost(host, port);
-    qDebug() << "Connecting to server at " + host + ":" + QString::number(port);
+    emit sendToQml("Connecting to server at " + host + ":" + QString::number(port));
     if (socket_.waitForConnected(3000))
     {
-        qDebug() << "Connection succes";
+        emit sendToQml("Connection succes");
     }
     else
     {
-        qDebug() << "Connection failed";
+        emit sendToQml("Connection failed");
     }
 }
 
@@ -26,7 +30,6 @@ void Client::sendMessage(const QString& message)
 {
     socket_.write((username_ + ": " + message).toUtf8());
     socket_.flush();
-    qDebug() << "Data written to socket by sender";
 }
 
 const QString& Client::getUsername()
@@ -39,19 +42,18 @@ void Client::setUsername(const QString& username)
     username_ = username;
 }
 
-void Client::onConnected()
+void Client::onDisconnected()
 {
-    qDebug() << "Socket connected";
+    emit sendToQml("Disconnected from server");
 }
 
 void Client::onErrorOccurred()
 {
-    qDebug() << "Error during socket connection";
+    emit sendToQml("Error during connection");
 }
 
 void Client::onReadyRead()
 {
-    qDebug() << "Received new message";
     const auto message = socket_.readAll();
     emit sendToQml(message);
 }

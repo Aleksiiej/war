@@ -4,8 +4,8 @@
 TcpServer::TcpServer()
 {
     connect(&server_, &QTcpServer::newConnection, this, &TcpServer::onNewConnection);
+    emit sendToQml("TcpServer initialized. Listening...");
     server_.listen(QHostAddress::Any, 12345);
-    qDebug() << "TcpServer initialized. Listening...";
 }
 
 TcpServer::~TcpServer()
@@ -14,7 +14,6 @@ TcpServer::~TcpServer()
     {
         it.value()->abort();
     }
-    qDebug() << "TcpServer removed";
 }
 
 void TcpServer::addMessage(const QString& msg)
@@ -28,7 +27,6 @@ void TcpServer::sendMessage(const QString& message)
     {
         it.value()->write(message.toUtf8());
         it.value()->flush();
-        qDebug() << "Data written to socket";
     }
     emit sendToQml(message);
 }
@@ -50,12 +48,11 @@ void TcpServer::onNewConnection()
     sockets_[ipAddress] = socket;
     connect(sockets_[ipAddress], &QTcpSocket::readyRead, this, &TcpServer::onReadyRead);
     connect(sockets_[ipAddress], &QTcpSocket::disconnected, this, &TcpServer::onDisconnected);
-    qDebug() << "New socket connected. IP: " << ipAddress.toString();
+    emit sendToQml("New user connected. IP: " + ipAddress.toString());
 }
 
 void TcpServer::onReadyRead()
 {
-    qDebug() << "Received new message";
     auto socket = qobject_cast<QTcpSocket*>(sender());
     if(socket != nullptr)
     {
@@ -72,6 +69,8 @@ void TcpServer::onDisconnected()
     const auto socket = qobject_cast<QTcpSocket*>(sender());
     if(socket != nullptr)
     {
-        sockets_.remove(socket->peerAddress());
+        const auto& address = socket->peerAddress();
+        emit sendToQml(address.toString() + " disconnected");
+        sockets_.remove(address);
     }
 }

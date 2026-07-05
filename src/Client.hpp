@@ -12,6 +12,7 @@ class Client: public QObject
 
 public:
     Client();
+    ~Client();
     
     Q_INVOKABLE void connectToServer(const QString& host, const int port);
     Q_INVOKABLE void sendMessage(const QString& message);
@@ -19,7 +20,7 @@ public:
     Q_INVOKABLE void setUsername(const QString& username);
 
 private slots:
-    void onConnected();
+    void onDisconnected();
     void onErrorOccurred();
     void onReadyRead();
 

@@ -51,21 +51,24 @@ Window
                         {
                             server = serverComponent.createObject(root)
                             server.username_ = usernameTextArea.text
-                            chatListModel.append({message: "Server initialized. Listening..."})
                             usernameRect.color = "lightgrey"
                             usernameTextArea.placeholderText = server.username_
                             usernameTextArea.enabled = false
                             createServerButton.text = "Close Server"
+                            joinServerButton.enabled = false
+                            sendMsgMouseArea.enabled = true
                         }
                     }
                     else
                     {
                         server.destroy()
-                        chatListModel.append({message: "Server removed"})
                         usernameRect.color = "white"
                         usernameTextArea.placeholderText = qsTr("Enter username")
                         usernameTextArea.enabled = true
                         createServerButton.text = "Create Server"
+                        joinServerButton.enabled = true
+                        sendMsgMouseArea.enabled = false
+                        chatListModel.append({message: "Server removed"})
                     }
                 }
             }
@@ -109,12 +112,33 @@ Window
                 text: "Join Server"
                 onClicked:
                 {
-                    var clientComponent = Qt.createComponent("Client.qml")
-                    if(clientComponent.status === Component.Ready)
+                    if(!client)
                     {
-                        client = clientComponent.createObject(root)
-                        client.username_ = usernameTextArea.text
-                        client.connectToServer("127.0.0.1", 12345)
+                        var clientComponent = Qt.createComponent("Client.qml")
+                        if(clientComponent.status === Component.Ready)
+                        {
+                            client = clientComponent.createObject(root)
+                            client.username_ = usernameTextArea.text
+                            client.connectToServer("127.0.0.1", 12345)
+                            usernameRect.color = "lightgrey"
+                            usernameTextArea.placeholderText = client.username_
+                            usernameTextArea.enabled = false
+                            joinServerButton.text = "Disconnect"
+                            createServerButton.enabled = false
+                            sendMsgMouseArea.enabled = true
+                        }
+                    }
+                    else
+                    {
+                        client.destroy()
+                        usernameRect.color = "white"
+                        usernameTextArea.placeholderText = qsTr("Enter username")
+                        usernameTextArea.enabled = true
+                        joinServerButton.text = "Join server"
+                        joinServerButton.enabled = true
+                        createServerButton.enabled = true
+                        sendMsgMouseArea.enabled = false
+                        chatListModel.append({message: "Disconnected from server"})
                     }
                 }
             }
@@ -198,6 +222,7 @@ Window
             {
                 id: sendMsgMouseArea
                 anchors.fill: parent
+                enabled: false
                 onClicked: 
                 {
                     if(server)
@@ -207,10 +232,6 @@ Window
                     else if(client)
                     {
                         client.sendMessage(sendMsgTextArea.text)
-                    }
-                    else
-                    {
-                        console.log("cannot send message, there is no server nor client");
                     }
                     sendMsgTextArea.clear()
                 }
