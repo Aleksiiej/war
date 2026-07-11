@@ -20,233 +20,254 @@ Window
     property var server: null
     property var client: null
 
-    Rectangle
+    Item
     {
-        id: statusBarRect
-        height: 28
-        color: "lightblue"
-        anchors
-        {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
+        id: ui
+        anchors.fill: parent
+        state: "disconnected"
 
-        RowLayout
-        {
-            id: statusBar
-
-            anchors.fill: parent
-
-            Button
+        states: [
+            State
             {
-                id: createServerButton
-                text: "Create Server"
-                onClicked:
-                {
-                    if(!server)
-                    {
-                        var serverComponent = Qt.createComponent("TcpServer.qml")
-                        if(serverComponent.status === Component.Ready)
-                        {
-                            server = serverComponent.createObject(root)
-                            server.username_ = usernameTextArea.text
-                            usernameRect.color = "lightgrey"
-                            serverAddressRect.color = "lightgrey"
-                            usernameTextArea.placeholderText = server.username_
-                            usernameTextArea.enabled = false
-                            serverAddressTextArea.enabled = false
-                            createServerButton.text = "Close Server"
-                            joinServerButton.enabled = false
-                            sendMsgMouseArea.enabled = true
-                            chatListModel.append({message: "Server created. Listening..."})
-                        }
-                    }
-                    else
-                    {
-                        server.destroy()
-                        usernameRect.color = "white"
-                        serverAddressRect.color = "white"
-                        usernameTextArea.placeholderText = qsTr("Enter username")
-                        usernameTextArea.enabled = true
-                        serverAddressTextArea.enabled = true
-                        createServerButton.text = "Create Server"
-                        joinServerButton.enabled = true
-                        sendMsgMouseArea.enabled = false
-                        chatListModel.append({message: "Server removed"})
-                    }
-                }
-            }
-
-            Rectangle
+                name: "disconnected"
+                PropertyChanges {target: usernameRect; color: "white"}
+                PropertyChanges {target: usernameTextArea;
+                                 placeholderText: "Enter username";
+                                 enabled: true}
+                PropertyChanges {target: serverAddressRect; color: "white"}
+                PropertyChanges {target: serverAddressTextArea; enabled: true}
+                PropertyChanges {target: createServerButton; text: "Create Server"}
+                PropertyChanges {target: joinServerButton; enabled: true}
+                PropertyChanges {target: sendMsgMouseArea; enabled: false}
+            },
+            State
             {
-                id: usernameRect
-                height: parent.height
-                width: 300
-            
-                TextArea
-                {
-                    id: usernameTextArea
-                    anchors.fill: parent
-                    placeholderText: qsTr("Enter username")
-                    placeholderTextColor: "black"
-                    color: "black"
-                }
-            }
-
-
-            Rectangle
+                name: "server"
+                PropertyChanges {target: usernameRect; color: "lightgrey"}
+                PropertyChanges {target: usernameTextArea;
+                                 placeholderText: server.username_;
+                                 enabled: false}
+                PropertyChanges {target: serverAddressRect; color: "lightgrey"}
+                PropertyChanges {target: serverAddressTextArea; enabled: false}
+                PropertyChanges {target: createServerButton; text: "Close server"}
+                PropertyChanges {target: joinServerButton; enabled: false}
+                PropertyChanges {target: sendMsgMouseArea; enabled: true}
+            },
+            State
             {
-                id: serverAddressRect
-                height: parent.height
-                width: 300
-            
-                TextArea
-                {
-                    id: serverAddressTextArea
-                    anchors.fill: parent
-                    placeholderText: qsTr("Enter IP address and port")
-                    placeholderTextColor: "black"
-                    color: "black"
-                }
+                name: "client"
+                PropertyChanges {target: usernameRect; color: "lightgrey"}
+                PropertyChanges {target: usernameTextArea;
+                                 placeholderText: client.username_;
+                                 enabled: false}
+                PropertyChanges {target: serverAddressRect; color: "lightgrey"}
+                PropertyChanges {target: serverAddressTextArea; enabled: false}
+                PropertyChanges {target: createServerButton; enabled: false}
+                PropertyChanges {target: joinServerButton; text: "Disconnect"}
+                PropertyChanges {target: sendMsgMouseArea; enabled: true}
             }
-
-            Button
-            {
-                id: joinServerButton
-                text: "Join Server"
-                onClicked:
-                {
-                    if(!client)
-                    {
-                        var clientComponent = Qt.createComponent("Client.qml")
-                        if(clientComponent.status === Component.Ready)
-                        {
-                            client = clientComponent.createObject(root)
-                            client.username_ = usernameTextArea.text
-                            client.connectToServer(serverAddressTextArea.text)
-                            usernameRect.color = "lightgrey"
-                            serverAddressRect.color = "lightgrey"
-                            usernameTextArea.placeholderText = client.username_
-                            usernameTextArea.enabled = false
-                            serverAddressTextArea.enabled = false
-                            joinServerButton.text = "Disconnect"
-                            createServerButton.enabled = false
-                            sendMsgMouseArea.enabled = true
-                        }
-                    }
-                    else
-                    {
-                        client.destroy()
-                        usernameRect.color = "white"
-                        serverAddressRect.color = "white"
-                        usernameTextArea.placeholderText = qsTr("Enter username")
-                        usernameTextArea.enabled = true
-                        serverAddressTextArea.enabled = true
-                        joinServerButton.text = "Join server"
-                        joinServerButton.enabled = true
-                        createServerButton.enabled = true
-                        sendMsgMouseArea.enabled = false
-                        chatListModel.append({message: "Disconnected from server"})
-                    }
-                }
-            }
-        }
-    }
- 
-    Rectangle
-    {
-        id: chatRect
-        color: "lightblue"
-
-        anchors
+        ]
+    
+    
+        Rectangle
         {
-            top: statusBarRect.bottom
-            left: parent.left
-            right: parent.right
-            bottom: sendMsgRect.top
-        }
-        
-        ListView
-        {
-            id: chatListView
-            anchors.fill: parent
-            model: ListModel{
-                id: chatListModel
-                ListElement{message: "Hi!"}
-            }
-            delegate: Text{
-                text: message
-            }
-            clip: true
-        }
-    }
-
-    Rectangle
-    {
-        id: sendMsgRect
-        height: 30
-        anchors
-        {
-            left: parent.left
-            bottom: parent.bottom
-            right: parent.right
-        }
-
-        property int buttonWidth: 60
-
-        TextArea
-        {
-            id: sendMsgTextArea
-            height: parent.height
-            width: parent.width - parent.buttonWidth
+            id: statusBarRect
+            height: 28
+            color: "lightblue"
             anchors
             {
-                bottom: parent.bottom
+                top: parent.top
                 left: parent.left
+                right: parent.right
             }
-            placeholderText: qsTr("Enter text here")
-            placeholderTextColor: "black"
-            color: "black"
+
+            RowLayout
+            {
+                id: statusBar
+
+                anchors.fill: parent
+
+                Button
+                {
+                    id: createServerButton
+                    text: "Create Server"
+                    onClicked:
+                    {
+                        if(!server)
+                        {
+                            var serverComponent = Qt.createComponent("TcpServer.qml")
+                            if(serverComponent.status === Component.Ready)
+                            {
+                                server = serverComponent.createObject(root)
+                                server.username_ = usernameTextArea.text
+                                ui.state = "server"
+                                chatListModel.append({message: "Server created. Listening..."})
+                            }
+                        }
+                        else
+                        {
+                            server.destroy()
+                            ui.state = "disconnected"
+                            chatListModel.append({message: "Server removed"})
+                        }
+                    }
+                }
+
+                Rectangle
+                {
+                    id: usernameRect
+                    height: parent.height
+                    width: 300
+
+                    TextArea
+                    {
+                        id: usernameTextArea
+                        anchors.fill: parent
+                        placeholderText: qsTr("Enter username")
+                        placeholderTextColor: "black"
+                        color: "black"
+                    }
+                }
+
+
+                Rectangle
+                {
+                    id: serverAddressRect
+                    height: parent.height
+                    width: 300
+
+                    TextArea
+                    {
+                        id: serverAddressTextArea
+                        anchors.fill: parent
+                        placeholderText: qsTr("Enter IP address and port")
+                        placeholderTextColor: "black"
+                        color: "black"
+                    }
+                }
+
+                Button
+                {
+                    id: joinServerButton
+                    text: "Join Server"
+                    onClicked:
+                    {
+                        if(!client)
+                        {
+                            var clientComponent = Qt.createComponent("Client.qml")
+                            if(clientComponent.status === Component.Ready)
+                            {
+                                client = clientComponent.createObject(root)
+                                client.username_ = usernameTextArea.text
+                                client.connectToServer(serverAddressTextArea.text)
+                                ui.state = "client"
+                            }
+                        }
+                        else
+                        {
+                            client.destroy()
+                            ui.state = "disconnected"
+                            chatListModel.append({message: "Disconnected from server"})
+                        }
+                    }
+                }
+            }
+        }
+    
+        Rectangle
+        {
+            id: chatRect
+            color: "lightblue"
+
+            anchors
+            {
+                top: statusBarRect.bottom
+                left: parent.left
+                right: parent.right
+                bottom: sendMsgRect.top
+            }
+
+            ListView
+            {
+                id: chatListView
+                anchors.fill: parent
+                model: ListModel{
+                    id: chatListModel
+                    ListElement{message: "Hi!"}
+                }
+                delegate: Text{
+                    text: message
+                }
+                clip: true
+            }
         }
 
         Rectangle
         {
-            height: parent.height
-            width: parent.buttonWidth
+            id: sendMsgRect
+            height: 30
             anchors
             {
+                left: parent.left
                 bottom: parent.bottom
                 right: parent.right
             }
-            color:"gray"
 
-            Text
+            property int buttonWidth: 60
+
+            TextArea
             {
-                anchors.centerIn: parent
-                text: "Send"
-            }
-            
-            MouseArea
-            {
-                id: sendMsgMouseArea
-                anchors.fill: parent
-                enabled: false
-                onClicked: 
+                id: sendMsgTextArea
+                height: parent.height
+                width: parent.width - parent.buttonWidth
+                anchors
                 {
-                    if(server)
-                    {
-                        server.sendMessage(server.username_ + ": " + sendMsgTextArea.text)
-                    }
-                    else if(client)
-                    {
-                        client.sendMessage(sendMsgTextArea.text)
-                    }
-                    sendMsgTextArea.clear()
+                    bottom: parent.bottom
+                    left: parent.left
                 }
-                onPressed: parent.color = "lightgrey"
-                onReleased: parent.color = "gray"
+                placeholderText: qsTr("Enter text here")
+                placeholderTextColor: "black"
+                color: "black"
+            }
+
+            Rectangle
+            {
+                height: parent.height
+                width: parent.buttonWidth
+                anchors
+                {
+                    bottom: parent.bottom
+                    right: parent.right
+                }
+                color:"gray"
+
+                Text
+                {
+                    anchors.centerIn: parent
+                    text: "Send"
+                }
+
+                MouseArea
+                {
+                    id: sendMsgMouseArea
+                    anchors.fill: parent
+                    enabled: false
+                    onClicked: 
+                    {
+                        if(server)
+                        {
+                            server.sendMessage(server.username_ + ": " + sendMsgTextArea.text)
+                        }
+                        else if(client)
+                        {
+                            client.sendMessage(sendMsgTextArea.text)
+                        }
+                        sendMsgTextArea.clear()
+                    }
+                    onPressed: parent.color = "lightgrey"
+                    onReleased: parent.color = "gray"
+                }
             }
         }
     }
-}
+}   
