@@ -12,9 +12,14 @@ Client::~Client()
     socket_.disconnectFromHost();
 }
 
-void Client::connectToServer(QString address)
+bool Client::connectToServer(QString address)
 {
     const auto addressList = address.split(':');
+    if(addressList.size() != 2)
+    {
+        sendToQml("Incorrect format of server address");
+        return false;
+    }
     const auto host = addressList.at(0);
     const auto port = addressList.at(1).toUShort();
     socket_.connectToHost(host, port);
@@ -22,10 +27,12 @@ void Client::connectToServer(QString address)
     if (socket_.waitForConnected(3000))
     {
         emit sendToQml("Connection succes");
+        return true;
     }
     else
     {
         emit sendToQml("Connection failed");
+        return false;
     }
 }
 

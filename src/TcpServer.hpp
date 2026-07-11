@@ -8,7 +8,7 @@ class TcpServer: public QObject
 {
     Q_OBJECT
     QML_ELEMENT
-    Q_PROPERTY(QString username_ READ getUsername WRITE setUsername)
+    Q_PROPERTY(QString username_ READ getUsername WRITE setUsername NOTIFY usernameChanged)
 
 public:
     TcpServer();
@@ -25,6 +25,7 @@ private slots:
     void onDisconnected();
 
 signals:
+    void usernameChanged();
     void sendToQml(const QString& msg);
 
 private:

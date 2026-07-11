@@ -159,8 +159,14 @@ Window
                             {
                                 client = clientComponent.createObject(root)
                                 client.username_ = usernameTextArea.text
-                                client.connectToServer(serverAddressTextArea.text)
-                                ui.state = "client"
+                                if(client.connectToServer(serverAddressTextArea.text))
+                                {
+                                    ui.state = "client"
+                                }
+                                else
+                                {
+                                    client.destroy()
+                                }
                             }
                         }
                         else
