@@ -33,4 +33,5 @@ private:
     QHash<QHostAddress, QTcpSocket*> sockets_;
     QVector<QString> messages_{};
     QString username_;
+    const uint16_t port_{45678};
 };

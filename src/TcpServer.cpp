@@ -5,7 +5,7 @@ TcpServer::TcpServer()
 {
     connect(&server_, &QTcpServer::newConnection, this, &TcpServer::onNewConnection);
     emit sendToQml("TcpServer initialized. Listening...");
-    server_.listen(QHostAddress::Any, 12345);
+    server_.listen(QHostAddress::Any, port_);
 }
 
 TcpServer::~TcpServer()

@@ -140,7 +140,7 @@ Window
                     {
                         id: serverAddressTextArea
                         anchors.fill: parent
-                        placeholderText: qsTr("Enter IP address and port")
+                        placeholderText: qsTr("Enter IP address")
                         placeholderTextColor: "black"
                         color: "black"
                     }

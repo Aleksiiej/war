@@ -31,4 +31,5 @@ signals:
 private:
     QTcpSocket socket_{};
     QString username_;
+    const uint16_t port_{45678};
 };
